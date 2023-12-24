@@ -1,39 +1,35 @@
 #include "dictionary.h"
-#include <stdio.h>
-
-struct dictionary {
-    struct __dict_head head[MAX_HASH];
-};
-
-struct __dict_chain {
-    char* key;
-    int value;
-    struct __dict_chain* next;
-};
-
-struct __dict_head {
-    uint32_t count;
-    struct __dict_chain* next;
-};
 
 struct dictionary dict;
 
 uint32_t appendElement(const char* key, int value) {
     struct __dict_chain *point;
     uchar_t hash;
-    int i;
 
     hash = getHash(key);
 
     // move to last element
-    point = dict.head[hash].next;
-    for (i = 0; i < dict.head[hash].count; i++) {
+    if (dict.head[hash].next == NULL) {
+        // if no element in head << create new chain
+        point = (struct __dict_chain*)malloc(sizeof(struct __dict_chain));
+        dict.head[hash].next = point;
+    }
+    else {
+        point = dict.head[hash].next;
+        while (point->next != NULL) {
+            if (strcmp(point->key, key) == 0) {
+                point->value = value;
+                return 0;
+            }
+            point = point->next;
+        }
+        if (strcmp(point->key, key) == 0) {
+            point->value = value;
+            return 0;
+        }
+        point->next = (struct __dict_chain *)malloc(sizeof(struct __dict_chain));
         point = point->next;
     }
-
-    // create new element
-    point->next = malloc(sizeof(struct __dict_chain));
-    point = point->next;
 
     // set key and value
     point->next = NULL;
@@ -66,7 +62,7 @@ uint32_t deleteElement(const char* key) {
 
     // modify chain
     if (point == dict.head[hash].next) {
-        dict.head[hash].next = NULL;
+        dict.head[hash].next = point->next;
     }
     else {
         prev->next = point->next;
@@ -78,7 +74,7 @@ uint32_t deleteElement(const char* key) {
     return dict.head[hash].count;
 }
 
-uint32_t modifyValue(const char* key, int value) {
+uint32_t setValue(const char* key, int value) {
     struct __dict_chain *point;
     uchar_t hash;
 
@@ -97,6 +93,23 @@ uint32_t modifyValue(const char* key, int value) {
 
     point->value = value;
     return 0;
+}
+
+int getValue(const char* key) {
+    struct __dict_chain *point;
+    uchar_t hash;
+    uint32_t i;
+
+    hash = getHash(key);
+
+    if (dict.head[hash].count == 0) return -1;
+
+    point = dict.head[hash].next;
+    for (i = 0; i < dict.head[hash].count; i++) {
+        if (strcmp(key, point->key) == 0) return point->value;
+        point = point->next;
+    }
+    return -1;
 }
 
 void initDictionary() {
@@ -119,6 +132,7 @@ void clearDictionary() {
 
         for (j = 0; j < count; j++) {
             next = point->next;
+            free(point->key);
             free(point);
             point = next;
         }

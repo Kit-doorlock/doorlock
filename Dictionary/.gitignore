@@ -1,2 +1,9 @@
-test
-test.*
+*
+
+# allow appending below files
+!.gitignore
+!dictionary.h
+!dictionary.c
+!test.c
+!Makefile
+!README.md
