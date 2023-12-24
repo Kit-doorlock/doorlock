@@ -19,13 +19,13 @@ uint32_t appendElement(const char* key, int value) {
         while (point->next != NULL) {
             if (strcmp(point->key, key) == 0) {
                 point->value = value;
-                return 0;
+                return dict.head[hash].count;
             }
             point = point->next;
         }
         if (strcmp(point->key, key) == 0) {
             point->value = value;
-            return 0;
+            return dict.head[hash].count;
         }
         point->next = (struct __dict_chain *)malloc(sizeof(struct __dict_chain));
         point = point->next;
@@ -159,7 +159,7 @@ void showAllDictionary() {
     int i;
 
     for (i = 0; i < MAX_HASH; i++) {
-        showDictionary(i);
+        if (dict.head[i].count > 0) showDictionary(i);
     }
     return;
 }
