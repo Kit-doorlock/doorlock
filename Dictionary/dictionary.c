@@ -1,8 +1,9 @@
 #include "dictionary.h"
 
 struct dictionary dict;
+char filepath[MAX_BUFFER];
 
-uint32_t appendElement(const char* key, int value) {
+uint32_t appendElement(const char* key, uchar_t value) {
     struct __dict_chain *point;
     uchar_t hash;
 
@@ -61,12 +62,11 @@ uint32_t deleteElement(const char* key) {
     }
 
     // modify chain
-    if (point == dict.head[hash].next) {
+    if (point == dict.head[hash].next)
         dict.head[hash].next = point->next;
-    }
-    else {
+    else
         prev->next = point->next;
-    }
+
     free(point);
 
 
@@ -74,7 +74,7 @@ uint32_t deleteElement(const char* key) {
     return dict.head[hash].count;
 }
 
-uint32_t setValue(const char* key, int value) {
+uint32_t setValue(const char* key, uchar_t value) {
     struct __dict_chain *point;
     uchar_t hash;
 
@@ -147,9 +147,9 @@ uchar_t getHash(const char* key) {
 
     total = 0;
     len = strlen(key);
-    for (i = 0; i < len; i++) {
+    for (i = 0; i < len; i++)
         total += key[i] % MAX_HASH;
-    }
+
     total %= MAX_HASH;
 
     return total;
@@ -158,9 +158,9 @@ uchar_t getHash(const char* key) {
 void showAllDictionary() {
     int i;
 
-    for (i = 0; i < MAX_HASH; i++) {
+    for (i = 0; i < MAX_HASH; i++)
         if (dict.head[i].count > 0) showDictionary(i);
-    }
+
     return;
 }
 
@@ -177,4 +177,52 @@ void showDictionary(int hash) {
     }
     printf("=====================\n");
     return;
+}
+
+int checkIfFileExists(const char *filename) {
+  FILE *file;
+  if ((file = fopen(filename, "r")) != NULL) {
+    fclose(file);
+    return 1;
+  }
+
+  return 0;
+}
+
+void readDataFromFile(const char* filename) {
+    if (!checkIfFileExists(filename)) return;
+
+    setDataFilename(filename);
+    reloadDataFromFile();
+}
+
+void reloadDataFromFile() {
+    char buffer[MAX_BUFFER];
+    FILE* fp;
+    char *key, *val_ptr;
+    int val;
+
+    if (!checkIfFileExists(filepath)) return;
+
+    clearDictionary();
+    // file exists logic is already exist
+    fp = fopen(filepath, "r");
+
+    while (fgets(buffer, sizeof(buffer), fp) != NULL) {
+        buffer[strlen(buffer)-1] = '\0';
+
+        key = strtok(buffer, ":");
+        val_ptr = atoi(strtok(NULL, ":"));
+
+        val = atoi(val_ptr);
+        appendElement(key, val);
+        // for debug
+        // printf("%s(%2d) hash's count - %d\n", key, getHash(key), appendElement(key, val));
+    }
+
+    fclose(fp);
+}
+
+void setDataFilename(const char* filename) {
+    strcpy(filepath, filename);
 }

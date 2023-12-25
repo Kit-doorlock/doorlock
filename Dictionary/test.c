@@ -3,27 +3,6 @@
 // when delete not element, only print success
 #define MINUS_VALUE_IS_FAIL(f) (f < 0 ? "fail" : "success")
 
-void readFile(const char* filename) {
-    char buffer[200];
-    char *key;
-    int val;
-    FILE* fp;
-
-    fp = fopen(filename, "r");
-    if (fp == NULL) {
-        perror("open fail\n"); 
-        exit(-1);
-    }
-
-    while (fgets(buffer, sizeof(buffer), fp) != NULL) {
-        buffer[strlen(buffer)-1] = '\0';
-
-        key = strtok(buffer, ":");
-        val = atoi(strtok(NULL, ":"));
-        printf("%s(%2d) hash's count - %d\n", key, getHash(key), appendElement(key, val));
-    }
-}
-
 void appendInCode() {
     printf("%2d hash's count - %d\n", getHash("ponml"), appendElement("ponml", 10));
     printf("%2d hash's count - %d\n", getHash("mnopqrs"), appendElement("mnopqrs", 10) );
@@ -43,10 +22,8 @@ void appendInCode() {
 int main() {
     initDictionary();
 
-
-
     // append test
-    readFile("datalist.txt");
+    readDataFromFile("datalist.txt");
     // appendInCode(); // not recomment
 
     // show test
