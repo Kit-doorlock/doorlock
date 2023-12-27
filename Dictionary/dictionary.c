@@ -185,7 +185,7 @@ void showDictionary(int hash) {
     point = dict.head[hash].next;
 
     while (point != NULL) {
-        printf("\t%10s: %10d\n", point->key, point->value);
+        printf("\t%10s: %2d, pin: %2d\n", point->key, point->value, point->pin);
         point = point->next;
     }
     printf("=====================\n");
