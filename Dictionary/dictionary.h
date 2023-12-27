@@ -8,13 +8,17 @@
 #define MAX_HASH 26
 #define MAX_BUFFER 201
 
+#define DIR_IN 0
+#define DIR_OUI 1
+
 typedef unsigned char uchar_t;
 typedef unsigned int uint32_t;
 
 struct __dict_chain {
     char* key;
-    uchar_t value;
     struct __dict_chain* next;
+    uchar_t pin;
+    uchar_t value;
 };
 
 struct __dict_head {
@@ -26,13 +30,18 @@ struct dictionary {
     struct __dict_head head[MAX_HASH];
 };
 
+typedef struct dictionary_return_value {
+    uchar_t value;
+    uchar_t pin;
+} dict_ret;
+
 extern struct dictionary dict;
 // extern char filepath[MAX_BUFFER];
 
-uint32_t appendElement(const char* key, uchar_t value);
+uint32_t appendElement(const char* key, uchar_t value, uchar_t pin);
 uint32_t deleteElement(const char* key);
-uint32_t setValue(const char* key, uchar_t value); // alias: modifyElement
-int getValue(const char* key);
+uint32_t setValue(const char* key, uchar_t value, uchar_t pin); // alias: modifyElement
+dict_ret getValue(const char* key);
 
 void initDictionary();
 void clearDictionary();

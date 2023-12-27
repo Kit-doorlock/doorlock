@@ -1,9 +1,11 @@
 #include "dictionary.h"
 
+void __setValue(struct __dict_chain *point, uchar_t value, uchar_t pin);
+
 struct dictionary dict;
 char filepath[MAX_BUFFER];
 
-uint32_t appendElement(const char* key, uchar_t value) {
+uint32_t appendElement(const char* key, uchar_t value, uchar_t pin) {
     struct __dict_chain *point;
     uchar_t hash;
 
@@ -19,13 +21,13 @@ uint32_t appendElement(const char* key, uchar_t value) {
         point = dict.head[hash].next;
         while (point->next != NULL) {
             if (strcmp(point->key, key) == 0) {
-                point->value = value;
+                __setValue(point, value, pin);
                 return dict.head[hash].count;
             }
             point = point->next;
         }
         if (strcmp(point->key, key) == 0) {
-            point->value = value;
+            __setValue(point, value, pin);
             return dict.head[hash].count;
         }
         point->next = (struct __dict_chain *)malloc(sizeof(struct __dict_chain));
@@ -36,7 +38,7 @@ uint32_t appendElement(const char* key, uchar_t value) {
     point->next = NULL;
     point->key = malloc(sizeof(char) * (strlen(key)+1));
     strcpy(point->key, key);
-    point->value = value;
+    __setValue(point, value, pin);
 
     dict.head[hash].count++;
     return dict.head[hash].count;
@@ -74,7 +76,7 @@ uint32_t deleteElement(const char* key) {
     return dict.head[hash].count;
 }
 
-uint32_t setValue(const char* key, uchar_t value) {
+uint32_t setValue(const char* key, uchar_t value, uchar_t pin) {
     struct __dict_chain *point;
     uchar_t hash;
 
@@ -91,25 +93,36 @@ uint32_t setValue(const char* key, uchar_t value) {
         if (point == NULL) return -1;
     }
 
-    point->value = value;
+    __setValue(point, value, pin);
     return 0;
 }
 
-int getValue(const char* key) {
+void __setValue(struct __dict_chain *point, uchar_t value, uchar_t pin) {
+    point->value = value;
+    point->pin = pin;
+}
+
+dict_ret getValue(const char* key) {
     struct __dict_chain *point;
     uchar_t hash;
     uint32_t i;
+    dict_ret ret;
 
+    ret.pin = 255; ret.value = 255;
     hash = getHash(key);
 
-    if (dict.head[hash].count == 0) return -1;
+    if (dict.head[hash].count == 0) return ret;
 
     point = dict.head[hash].next;
     for (i = 0; i < dict.head[hash].count; i++) {
-        if (strcmp(key, point->key) == 0) return point->value;
+        if (strcmp(key, point->key) == 0) {
+            ret.value = point->value;
+            ret.pin = point->pin;
+            return ret;
+        }
         point = point->next;
     }
-    return -1;
+    return ret;
 }
 
 void initDictionary() {
@@ -199,8 +212,8 @@ void readDataFromFile(const char* filename) {
 void reloadDataFromFile() {
     char buffer[MAX_BUFFER];
     FILE* fp;
-    char *key, *val_ptr;
-    int val;
+    char *key, *dir_ptr, *pin_ptr;
+    int dir, pin;
 
     if (!checkIfFileExists(filepath)) return;
 
@@ -209,15 +222,19 @@ void reloadDataFromFile() {
     fp = fopen(filepath, "r");
 
     while (fgets(buffer, sizeof(buffer), fp) != NULL) {
-        buffer[strlen(buffer)-1] = '\0';
+        // buffer[strlen(buffer)-1] = '\0';
+
+        if (buffer[0] == '#') continue;
 
         key = strtok(buffer, ":");
-        val_ptr = atoi(strtok(NULL, ":"));
+        dir_ptr = strtok(NULL, ":");
+        pin_ptr = strtok(NULL, " ");
 
-        val = atoi(val_ptr);
-        appendElement(key, val);
+        dir = atoi(dir_ptr);
+        pin = atoi(pin_ptr);
+        appendElement(key, (uchar_t)dir, (uchar_t)pin);
         // for debug
-        // printf("%s(%2d) hash's count - %d\n", key, getHash(key), appendElement(key, val));
+        // printf("%s(%2d) hash's count - %d\n", key, getHash(key), appendElement(key, dir));
     }
 
     fclose(fp);

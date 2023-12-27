@@ -4,24 +4,25 @@
 #define MINUS_VALUE_IS_FAIL(f) (f < 0 ? "fail" : "success")
 
 void appendInCode() {
-    printf("%2d hash's count - %d\n", getHash("ponml"), appendElement("ponml", 10));
-    printf("%2d hash's count - %d\n", getHash("mnopqrs"), appendElement("mnopqrs", 10) );
-    printf("%2d hash's count - %d\n", getHash("ponml"), appendElement("ponml", 20));
-    printf("%2d hash's count - %d\n", getHash("mnopqrs"), appendElement("mnopqrs", 20));
-    printf("%2d hash's count - %d\n", getHash("defghij"), appendElement("defghij", 10));;
-    printf("%2d hash's count - %d\n", getHash("wxyzuv"), appendElement("wxyzuv", 10));
-    printf("%2d hash's count - %d\n", getHash("klmnopqrst"), appendElement("klmnopqrst", 10));
-    printf("%2d hash's count - %d\n", getHash("mnopqrs"), appendElement("mnopqrs", 10));
-    printf("%2d hash's count - %d\n", getHash("qwer"), appendElement("qwer", 10));
-    printf("%2d hash's count - %d\n", getHash("zxcv"), appendElement("zxcv", 10));
-    printf("%2d hash's count - %d\n", getHash("sdfg"), appendElement("sdfg", 10));
-    printf("%2d hash's count - %d\n", getHash("wert"), appendElement("wert", 10));
-    printf("%2d hash's count - %d\n", getHash("xcvb"), appendElement("xcvb", 10));
+    printf("%2d hash's count - %d\n", getHash("ponml"), appendElement("ponml", 10, 20));
+    printf("%2d hash's count - %d\n", getHash("mnopqrs"), appendElement("mnopqrs", 10, 20) );
+    printf("%2d hash's count - %d\n", getHash("ponml"), appendElement("ponml", 20, 20));
+    printf("%2d hash's count - %d\n", getHash("mnopqrs"), appendElement("mnopqrs", 20, 20));
+    printf("%2d hash's count - %d\n", getHash("defghij"), appendElement("defghij", 1, 200));;
+    printf("%2d hash's count - %d\n", getHash("wxyzuv"), appendElement("wxyzuv", 1, 200));
+    printf("%2d hash's count - %d\n", getHash("klmnopqrst"), appendElement("klmnopqrst", 1, 200));
+    printf("%2d hash's count - %d\n", getHash("mnopqrs"), appendElement("mnopqrs", 1, 200));
+    printf("%2d hash's count - %d\n", getHash("qwer"), appendElement("qwer", 1, 200));
+    printf("%2d hash's count - %d\n", getHash("zxcv"), appendElement("zxcv", 1, 200));
+    printf("%2d hash's count - %d\n", getHash("sdfg"), appendElement("sdfg", 10, 20));
+    printf("%2d hash's count - %d\n", getHash("wert"), appendElement("wert", 1, 200));
+    printf("%2d hash's count - %d\n", getHash("xcvb"), appendElement("xcvb", 10, 20));
 }
 
 int main() {
-    initDictionary();
+    dict_ret ret;
 
+    initDictionary();
     // append test
     readDataFromFile("datalist.txt");
     // appendInCode(); // not recomment
@@ -32,9 +33,11 @@ int main() {
 
     // setValue & getValue test
     printf("\n\n");
-    printf("ponml value - %d\n", getValue("ponml"));
-    printf("setvalue %s\n", MINUS_VALUE_IS_FAIL(setValue("mnopqrs", 30)));
-    printf("ponml value - %d\n", getValue("ponml"));
+
+    ret = getValue("ponml");
+    printf("ponml value - %d, %d\n", ret.value, ret.pin);
+    printf("setvalue %s\n", MINUS_VALUE_IS_FAIL(setValue("mnopqrs", 30, 20)));
+    printf("ponml value - %d, %d\n", ret.value, ret.pin);
 
     // delete test
     printf("\n\n");
