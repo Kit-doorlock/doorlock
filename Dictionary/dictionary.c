@@ -222,10 +222,10 @@ void reloadDataFromFile() {
     fp = fopen(filepath, "r");
 
     while (fgets(buffer, sizeof(buffer), fp) != NULL) {
-        // buffer[strlen(buffer)-1] = '\0';
+        if (buffer[0] == '#') continue; // dismiss comment
+        if (buffer[0] == '\r' || buffer[0] == '\n') continue; // dismiss blank line
 
-        if (buffer[0] == '#') continue;
-
+        // string tokenize
         key = strtok(buffer, ":");
         dir_ptr = strtok(NULL, ":");
         pin_ptr = strtok(NULL, " ");

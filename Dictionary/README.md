@@ -23,29 +23,38 @@ struct dictionary {
 ```
 
 if you want to append data from file, below is example   
-you just follow rule <code>&lt;key&gt;:&lt;value&gt;</code>
+you just follow rule <code>&lt;key&gt;:&lt;direction(1 - GPIO_IN / 0 - GPIO_OUT)&gt;:&lt;pin num&gt;</code>   
+if you want to write comment in text, just use `#` character.
 ```
-ponml:18
-mnopqrs:12
-defghij:15
-wxyzuv:11
-klmnopqrst:13
-mnopqrs:12
-qwer:11
-zxcv:16
-sdfg:12
-wert:15
-xcvb:18
-iojioasjdf:12
-jncjkasd:13
-iojqior:18
-ajkl:111
-iojioasjdf:1293
-9192hjjknas:1907451
-jaiocjsd09:129
-iojio:1123
-iojnnn:1415
-z,.xmcop:1214
-901njk:111
-iojcais:1565
+# this is example of comment.
+# key - identify in dictionary
+# direction - direction of gpio current flow 
+# pin num - i use wiringpi gpio pin map
+
+
+ponml:1
+mnopqrs:0
+defghij:0
+wxyzuv:0
+klmnopqrst:1
+mnopqrs:1
+qwer:1
+zxcv:1
+sdfg:1
+wert:0
+xcvb:1
+iojioasjdf:1
+
+
+jncjkasd:1
+iojqior:1
+ajkl:1
+iojioasjdf:1
+9192hjjknas:0
+jaiocjsd09:0
+iojio:0
+iojnnn:1
+z,.xmcop:0
+901njk:1
+iojcais:0
 ```
