@@ -148,7 +148,7 @@ bool match(const char* str) {
 // 모듈과의 통신이 필요 없음
 void priorAnalyseArgv(int argc, char* argv[]) {
   if (argc < 2) {
-    printUsage()정
+    printUsage();
     exit(1);
   }
 
