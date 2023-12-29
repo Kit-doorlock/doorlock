@@ -1,0 +1,5 @@
+address=0xffffffff
+password=none
+baudrate=9600
+detect_pin=1
+serial=/dev/ttyAMA0
