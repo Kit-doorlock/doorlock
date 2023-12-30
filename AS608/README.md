@@ -412,6 +412,13 @@ fp setpwd 0xcc0825cc
 
 ![usage-2](img/usage-2.png)
 
+## 참고
+
+.fpconfig 파일은 사용자의 HOME 디렉터리에 생성됩니다. 이에 유의해주세요.
+
+`sudo ./fp <command>`를 사용할 경우 HOME 디렉터리가 아닌 ROOT 디렉터리에 .fpconfig 파일이 생성됩니다.
+
+
 ## END
 
 <leopard.c@outlook.com>
