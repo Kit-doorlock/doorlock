@@ -720,7 +720,7 @@ bool readConfig() {
     g_config.address = 0xffffffff;
     g_config.password= 0x00000000;
     g_config.has_password = 0;
-    g_config.baudrate = 9600;
+    g_config.baudrate = 57600; //baudrate Sensor's UART baud rate (usually 57600, 9600 or 115200)
     g_config.detect_pin = 1; 
     strcpy(g_config.serial, "/dev/ttyAMA0");
 
