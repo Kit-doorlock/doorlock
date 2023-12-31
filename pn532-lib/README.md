@@ -1,3 +1,5 @@
+원글은 [이쪽](https://github.com/soonuse/pn532-lib)으로
+
 # pn532-lib
 PN532 NFC Library for Raspberry Pi, STM32, Arduino
 
